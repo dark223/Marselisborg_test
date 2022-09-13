@@ -8,7 +8,7 @@
             By = by;
         }
 
-        public int FlytningeCenterID { get; set; }
+      public int FlytningeCenterID { get; set; }
       public string By { get; set; }
 
     }
