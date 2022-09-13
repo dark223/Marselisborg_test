@@ -2,7 +2,6 @@
 using Npgsql;
 using System.Data.SqlClient;
 
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace MarselisborgAPI.Controllers
 {
@@ -16,10 +15,13 @@ namespace MarselisborgAPI.Controllers
 
             _configuration = Configuration;
         }
-       
 
-        
 
+
+        /// <summary>
+        /// Gets all Refugees in database
+        /// </summary>
+        /// <returns></returns>
 
         [HttpGet("AllRefugees")]
         public IEnumerable<Refugee> AllRefugees()
@@ -81,7 +83,10 @@ namespace MarselisborgAPI.Controllers
         }
 
 
-
+        /// <summary>
+        /// Gets all RefugeeCenters in database
+        /// </summary>
+        /// <returns></returns>
         [HttpGet("AllRefugeeCenters")]
         public IEnumerable<RefugeeCenter> AllRefugeeCenters()
         {
@@ -120,7 +125,11 @@ namespace MarselisborgAPI.Controllers
 
         }
 
-
+        /// <summary>
+        /// Gets all Refugees from a specific center 
+        /// </summary>
+        /// <param name="CenterID"></param>
+        /// <returns></returns>
         [HttpGet("AllRefugeesFromCenter/{CenterID}")]
         public IEnumerable<Refugee> AllRefugeesFromCenter(int CenterID)
         {
@@ -181,9 +190,13 @@ namespace MarselisborgAPI.Controllers
             }
         }
 
-
-        [HttpGet("RefugeeFamilly/{RefugeeID}")]
-        public IEnumerable<Refugee> RefugeeFamilly( int RefugeeID)
+        /// <summary>
+        /// Gets all members of a Refugee familly based on a familly member
+        /// </summary>
+        /// <param name="RefugeeID"></param>
+        /// <returns></returns>
+        [HttpGet("RefugeeFamily/{RefugeeID}")]
+        public IEnumerable<Refugee> RefugeeFamily( int RefugeeID)
         {
             List<Refugee> Refugees = new List<Refugee>();
             try
@@ -236,7 +249,7 @@ namespace MarselisborgAPI.Controllers
                             string Name = "Not found";
                             int Age = 0;
                             int Center = 0;
-                            int? Familiy = null;
+                            int? Family = null;
                             if (!Reader.IsDBNull(0))
                             {
                                 FamiliyID = Reader.GetInt32(0);
@@ -255,10 +268,10 @@ namespace MarselisborgAPI.Controllers
                             }
                             if (!Reader.IsDBNull(4))
                             {
-                                Familiy = Reader.GetInt32(4);
+                                Family = Reader.GetInt32(4);
                             }
 
-                            Refugees.Add(new Refugee(FamiliyID, Name, Age, Center, Familiy));
+                            Refugees.Add(new Refugee(FamiliyID, Name, Age, Center, Family));
                         }
             
                     }
@@ -276,7 +289,11 @@ namespace MarselisborgAPI.Controllers
         }
 
 
-
+        /// <summary>
+        /// Inserts a new person into the Refugee table
+        /// </summary>
+        /// <param name="Person"></param>
+        /// <returns></returns>
         [HttpPost("AddRefugee")]
         public string AddRefugee([FromBody]RefugeeDTO Person)
         {
@@ -307,14 +324,17 @@ namespace MarselisborgAPI.Controllers
             catch (Exception e)
             {
 
-           
-
                 return "Failed to add Refugee";
             }
         }
 
 
-
+        /// <summary>
+        /// Inserts a family name into the database.
+        /// It is then possible to create a familly relation between refugees
+        /// </summary>
+        /// <param name="FamilyName"></param>
+        /// <returns></returns>
         [HttpPost("AddFamily/{FamilyName}")]
         public string AddFamily(string FamilyName)
         {
